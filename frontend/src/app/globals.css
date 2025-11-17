@@ -1,0 +1,57 @@
+/* Tailwind base + utilities (required for Tailwind to work) */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Color & font variables */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+
+  /* next/font sets CSS variables on the <body> via the class names we apply from layout.tsx.
+     We still provide sensible fallbacks here for systems without the font variables. */
+  --font-sans: var(
+    --font-geist-sans,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial
+  );
+  --font-mono: var(
+    --font-geist-mono,
+    ui-monospace,
+    "SFMono-Regular",
+    Menlo,
+    Monaco,
+    "Roboto Mono",
+    "Segoe UI Mono"
+  );
+}
+
+/* dark mode (system preference) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+/* Basic layout / accessibility */
+html,
+body,
+#__next {
+  height: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  line-height: 1.4;
+}
