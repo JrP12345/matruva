@@ -1,15 +1,226 @@
-/* Tailwind base + utilities (required for Tailwind to work) */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* Color & font variables */
+/* Tailwind v4 Theme Configuration */
+@theme {
+  /* Color palette */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+
+  /* Animations */
+  --animate-fade-in: fade-in 0.2s ease-in-out;
+  --animate-slide-up: slide-up 0.3s ease-out;
+  --animate-slide-down: slide-down 0.3s ease-out;
+  --animate-scale-in: scale-in 0.2s ease-out;
+}
+
+/* Apple-inspired smooth animations with reduced motion support */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes press {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.96);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Custom animation classes with hardware acceleration */
+.animate-fade-in {
+  animation: fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+.animate-slide-down {
+  animation: slide-down 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 1000px 100%;
+}
+
+.animate-press {
+  animation: press 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   THEME SYSTEM - CSS VARIABLES
+   ============================================ */
+
+/* Light Theme (Default) */
 :root {
+  /* ===== Background Colors ===== */
   --background: #ffffff;
-  --foreground: #171717;
+  --background-secondary: #fafafa; /* neutral-50 */
+  --background-tertiary: #f5f5f5; /* neutral-100 */
 
-  /* next/font sets CSS variables on the <body> via the class names we apply from layout.tsx.
-     We still provide sensible fallbacks here for systems without the font variables. */
+  /* ===== Foreground/Text Colors ===== */
+  --foreground: #0a0a0a; /* neutral-950 */
+  --foreground-secondary: #737373; /* neutral-500 */
+  --foreground-tertiary: #a3a3a3; /* neutral-400 */
+  --foreground-muted: #d4d4d4; /* neutral-300 */
+
+  /* ===== Border Colors ===== */
+  --border: #e5e5e5; /* neutral-200 */
+  --border-secondary: #d4d4d4; /* neutral-300 */
+  --border-hover: #a3a3a3; /* neutral-400 */
+
+  /* ===== Input/Card Background ===== */
+  --input-background: #ffffff; /* Pure white for inputs in light mode */
+  --card-background: #ffffff;
+  --card-border: #e5e5e5;
+  --muted: #f5f5f5; /* neutral-100 for hover states */
+
+  /* ===== Primary Brand Colors ===== */
+  --primary: #3b82f6; /* blue-500 */
+  --primary-hover: #2563eb; /* blue-600 */
+  --primary-active: #1d4ed8; /* blue-700 */
+  --primary-foreground: #ffffff;
+
+  /* ===== Success Colors ===== */
+  --success: #10b981; /* green-500 */
+  --success-bg: #d1fae5; /* green-100 */
+  --success-border: #a7f3d0; /* green-200 */
+  --success-foreground: #065f46; /* green-800 */
+
+  /* ===== Warning Colors ===== */
+  --warning: #f59e0b; /* amber-500 */
+  --warning-bg: #fef3c7; /* amber-100 */
+  --warning-border: #fde68a; /* amber-200 */
+  --warning-foreground: #92400e; /* amber-800 */
+
+  /* ===== Error/Danger Colors ===== */
+  --error: #ef4444; /* red-500 */
+  --error-bg: #fee2e2; /* red-100 */
+  --error-border: #fecaca; /* red-200 */
+  --error-foreground: #991b1b; /* red-800 */
+
+  /* ===== Info Colors ===== */
+  --info: #0ea5e9; /* sky-500 */
+  --info-bg: #e0f2fe; /* sky-100 */
+  --info-border: #bae6fd; /* sky-200 */
+  --info-foreground: #075985; /* sky-800 */
+
+  /* ===== Secondary/Gray Colors ===== */
+  --secondary: #6b7280; /* gray-500 */
+  --secondary-bg: #f3f4f6; /* gray-100 */
+  --secondary-hover: #4b5563; /* gray-600 */
+  --secondary-foreground: #111827; /* gray-900 */
+
+  /* ===== Glass Morphism ===== */
+  --glass-background: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-hover: rgba(255, 255, 255, 0.9);
+
+  /* ===== Shadows ===== */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  --shadow-glass-hover: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
+
+  /* ===== Hover States ===== */
+  --hover-overlay: rgba(0, 0, 0, 0.05);
+  --hover-overlay-secondary: rgba(0, 0, 0, 0.1);
+
+  /* ===== Focus Ring ===== */
+  --focus-ring: rgba(59, 130, 246, 0.2);
+
+  /* ===== Fonts ===== */
   --font-sans: var(
     --font-geist-sans,
     ui-sans-serif,
@@ -31,15 +242,102 @@
   );
 }
 
-/* dark mode (system preference) */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================================
+   DARK THEME
+   ============================================ */
+.dark {
+  /* ===== Background Colors ===== */
+  --background: #0a0a0a; /* neutral-950 */
+  --background-secondary: #171717; /* neutral-900 */
+  --background-tertiary: #262626; /* neutral-800 */
+
+  /* ===== Foreground/Text Colors ===== */
+  --foreground: #fafafa; /* neutral-50 */
+  --foreground-secondary: #a3a3a3; /* neutral-400 */
+  --foreground-tertiary: #737373; /* neutral-500 */
+  --foreground-muted: #525252; /* neutral-600 */
+
+  /* ===== Border Colors ===== */
+  --border: #262626; /* neutral-800 */
+  --border-secondary: #404040; /* neutral-700 */
+  --border-hover: #525252; /* neutral-600 */
+
+  /* ===== Input/Card Background ===== */
+  --input-background: #171717; /* neutral-900 */
+  --card-background: #171717;
+  --card-border: #262626;
+  --muted: #262626; /* neutral-800 for hover states */
+
+  /* ===== Primary Brand Colors ===== */
+  --primary: #3b82f6; /* blue-500 */
+  --primary-hover: #60a5fa; /* blue-400 */
+  --primary-active: #2563eb; /* blue-600 */
+  --primary-foreground: #ffffff;
+
+  /* ===== Success Colors ===== */
+  --success: #10b981; /* green-500 */
+  --success-bg: rgba(16, 185, 129, 0.2); /* green with opacity */
+  --success-border: rgba(16, 185, 129, 0.3);
+  --success-foreground: #6ee7b7; /* green-300 */
+
+  /* ===== Warning Colors ===== */
+  --warning: #f59e0b; /* amber-500 */
+  --warning-bg: rgba(245, 158, 11, 0.2);
+  --warning-border: rgba(245, 158, 11, 0.3);
+  --warning-foreground: #fcd34d; /* amber-300 */
+
+  /* ===== Error/Danger Colors ===== */
+  --error: #ef4444; /* red-500 */
+  --error-bg: rgba(239, 68, 68, 0.2);
+  --error-border: rgba(239, 68, 68, 0.3);
+  --error-foreground: #fca5a5; /* red-300 */
+
+  /* ===== Info Colors ===== */
+  --info: #0ea5e9; /* sky-500 */
+  --info-bg: rgba(14, 165, 233, 0.2);
+  --info-border: rgba(14, 165, 233, 0.3);
+  --info-foreground: #7dd3fc; /* sky-300 */
+
+  /* ===== Secondary/Gray Colors ===== */
+  --secondary: #6b7280; /* gray-500 */
+  --secondary-bg: #1f2937; /* gray-800 */
+  --secondary-hover: #9ca3af; /* gray-400 */
+  --secondary-foreground: #f9fafb; /* gray-50 */
+
+  /* ===== Glass Morphism ===== */
+  --glass-background: rgba(17, 17, 17, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-hover: rgba(17, 17, 17, 0.9);
+
+  /* ===== Shadows ===== */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4),
+    0 2px 4px -2px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4),
+    0 4px 6px -4px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4),
+    0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --shadow-glass-hover: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+
+  /* ===== Hover States ===== */
+  --hover-overlay: rgba(255, 255, 255, 0.05);
+  --hover-overlay-secondary: rgba(255, 255, 255, 0.1);
+
+  /* ===== Focus Ring ===== */
+  --focus-ring: rgba(59, 130, 246, 0.3);
 }
 
 /* Basic layout / accessibility */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body,
 #__next {
@@ -52,6 +350,170 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Smooth transitions for theme changes */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   UTILITY CLASSES USING CSS VARIABLES
+   ============================================ */
+
+/* Background utilities */
+.bg-primary {
+  background-color: var(--primary);
+}
+.bg-secondary {
+  background-color: var(--secondary-bg);
+}
+.bg-success {
+  background-color: var(--success-bg);
+}
+.bg-warning {
+  background-color: var(--warning-bg);
+}
+.bg-error {
+  background-color: var(--error-bg);
+}
+.bg-info {
+  background-color: var(--info-bg);
+}
+.bg-card {
+  background-color: var(--card-background);
+}
+.bg-input {
+  background-color: var(--input-background);
+}
+.bg-glass {
+  background-color: var(--glass-background);
+}
+
+/* Text/Foreground utilities */
+.text-foreground {
+  color: var(--foreground);
+}
+.text-foreground-secondary {
+  color: var(--foreground-secondary);
+}
+.text-foreground-muted {
+  color: var(--foreground-tertiary);
+}
+.text-primary {
+  color: var(--primary);
+}
+.text-success {
+  color: var(--success-foreground);
+}
+.text-warning {
+  color: var(--warning-foreground);
+}
+.text-error {
+  color: var(--error-foreground);
+}
+.text-info {
+  color: var(--info-foreground);
+}
+
+/* Border utilities */
+.border-default {
+  border-color: var(--border);
+}
+.border-secondary {
+  border-color: var(--border-secondary);
+}
+.border-card {
+  border-color: var(--card-border);
+}
+.border-primary {
+  border-color: var(--primary);
+}
+.border-success {
+  border-color: var(--success-border);
+}
+.border-warning {
+  border-color: var(--warning-border);
+}
+.border-error {
+  border-color: var(--error-border);
+}
+.border-info {
+  border-color: var(--info-border);
+}
+
+/* Hover utilities */
+.hover-overlay:hover {
+  background-color: var(--hover-overlay);
+}
+
+/* Focus ring utility */
+.focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* Shadow utilities */
+.shadow-glass {
+  box-shadow: var(--shadow-glass);
+}
+.shadow-glass-hover:hover {
+  box-shadow: var(--shadow-glass-hover);
+}
+
+/* Selection colors */
+::selection {
+  background-color: rgba(59, 130, 246, 0.3);
+  color: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.5);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(75, 85, 99, 0.7);
+}
+
+/* Smooth theme transitions for all elements */
+* {
+  transition-property: background-color, border-color, color, fill, stroke,
+    opacity, box-shadow;
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Preserve transform and animation transitions */
+*[class*="animate-"],
+*[class*="transition-transform"],
+*[class*="hover:scale"],
+*[class*="hover:rotate"] {
+  transition-property: background-color, border-color, color, fill, stroke,
+    opacity, box-shadow, transform;
 }
