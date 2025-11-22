@@ -21,9 +21,13 @@ app.use(
   })
 );
 
+// Rate limiting (more lenient in development)
 const limiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: 30,
+  windowMs: 60 * 1000, // 1 minute
+  max: NODE_ENV === "production" ? 100 : 1000, // 100 in prod, 1000 in dev
+  message: "Too many requests, please try again later.",
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 app.use(limiter);
 
@@ -36,15 +40,25 @@ app.use("/v1/auth", authRoutes);
 app.use("/v1/admin", adminRoutes);
 
 // Only start the server if this file is run directly (not imported for tests)
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Check if running directly (not being imported as a module)
+const isMainModule =
+  process.argv[1] &&
+  (process.argv[1].includes("app.ts") || process.argv[1].includes("app.js"));
+
+if (isMainModule) {
   mongoose
     .connect(DATABASE_URI)
     .then(() => {
-      console.log("Mongo connected");
-      app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+      console.log("✅ MongoDB connected successfully");
+      app.listen(PORT, () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+        console.log(`📡 API: http://localhost:${PORT}`);
+        console.log(`🔑 JWKS: http://localhost:${PORT}/.well-known/jwks.json`);
+        console.log(`💚 Health: http://localhost:${PORT}/health`);
+      });
     })
     .catch((err) => {
-      console.error("Mongo connection error", err);
+      console.error("❌ MongoDB connection error:", err);
       process.exit(1);
     });
 }

@@ -220,26 +220,11 @@
   /* ===== Focus Ring ===== */
   --focus-ring: rgba(59, 130, 246, 0.2);
 
-  /* ===== Fonts ===== */
-  --font-sans: var(
-    --font-geist-sans,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial
-  );
-  --font-mono: var(
-    --font-geist-mono,
-    ui-monospace,
-    "SFMono-Regular",
-    Menlo,
-    Monaco,
-    "Roboto Mono",
-    "Segoe UI Mono"
-  );
+  /* ===== Fonts (Apple SF Pro style) ===== */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    "SF Pro Text", "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
+  --font-mono: "SF Mono", "Monaco", "Cascadia Code", "Roboto Mono",
+    "Courier New", monospace;
 }
 
 /* ============================================
@@ -351,18 +336,36 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1;
+  letter-spacing: -0.011em;
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.47;
+  font-weight: 400;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Smooth transitions for theme changes */
+/* Smooth transitions for theme changes - Apple style */
 *,
 *::before,
 *::after {
-  transition-property: background-color, border-color, color, fill, stroke;
+  transition-property: background-color, border-color, color, fill, stroke,
+    opacity;
   transition-duration: 0.3s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Smooth transforms */
+button,
+a,
+[role="button"] {
+  transition: transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1),
+    opacity 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+button:active,
+a:active,
+[role="button"]:active {
+  transform: scale(0.98);
 }
 
 /* ============================================
@@ -501,12 +504,30 @@ body {
   background: rgba(75, 85, 99, 0.7);
 }
 
+/* Apple-style headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  line-height: 1.2;
+}
+
+/* Body text */
+p {
+  line-height: 1.47;
+  letter-spacing: -0.011em;
+}
+
 /* Smooth theme transitions for all elements */
 * {
   transition-property: background-color, border-color, color, fill, stroke,
     opacity, box-shadow;
   transition-duration: 300ms;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 /* Preserve transform and animation transitions */
@@ -516,4 +537,38 @@ body {
 *[class*="hover:rotate"] {
   transition-property: background-color, border-color, color, fill, stroke,
     opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Loading skeleton shimmer effect */
+@keyframes loading-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.loading-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.3) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: loading-shimmer 2s infinite;
 }
