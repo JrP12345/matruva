@@ -48,12 +48,12 @@ NEXT_PUBLIC_RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxxxxx
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server with Turbopack |
-| `npm run build` | Build for production |
-| `npm start` | Start production server |
-| `npm run lint` | Run ESLint |
+| Command         | Description                             |
+| --------------- | --------------------------------------- |
+| `npm run dev`   | Start development server with Turbopack |
+| `npm run build` | Build for production                    |
+| `npm start`     | Start production server                 |
+| `npm run lint`  | Run ESLint                              |
 
 ## Project Structure
 
@@ -86,12 +86,14 @@ frontend/
 ## UI Components
 
 ### Layout Components
+
 - `Container` - Responsive container with size variants
 - `Navbar` - Global navigation with auth state
 - `Footer` - Footer with social links
 - `Breadcrumb` - Navigation breadcrumbs
 
 ### Form Components
+
 - `Input` - Text input with validation states
 - `TextArea` - Multi-line text input
 - `Select` - Dropdown select
@@ -101,6 +103,7 @@ frontend/
 - `Form` - Form wrapper with validation
 
 ### Data Display
+
 - `Card` - Content card with header/footer
 - `Badge` - Status badges
 - `ProductCard` - Product display card
@@ -110,6 +113,7 @@ frontend/
 - `Pagination` - Page navigation
 
 ### Feedback
+
 - `Toast` - Notification toasts
 - `Modal` - Dialog/modal overlay
 - `Spinner` - Loading spinner
@@ -117,6 +121,7 @@ frontend/
 - `ErrorBoundary` - Error handling boundary
 
 ### Interactive
+
 - `Carousel` - Image carousel (full-width responsive)
 - `ColorPicker` - Color selection
 - `DatePicker` - Date selection
@@ -126,12 +131,14 @@ frontend/
 - `SearchBar` - Search input
 
 ### Navigation
+
 - `ThemeToggle` - Dark/light mode toggle
 - `Portal` - React portal utility
 
 ## Contexts
 
 ### AuthContext
+
 - User authentication state
 - Login/logout functions
 - JWT token management (access + refresh)
@@ -139,12 +146,14 @@ frontend/
 - Prevents flash on refresh
 
 ### CartContext
+
 - Shopping cart state
 - Add/remove items
 - Update quantities
 - Cart persistence (localStorage)
 
 ### ThemeContext
+
 - Dark/light mode
 - Theme persistence
 - System preference detection
@@ -152,6 +161,7 @@ frontend/
 ## Key Features
 
 ### Authentication
+
 - JWT-based authentication
 - Access tokens (in-memory)
 - Refresh tokens (HttpOnly cookies)
@@ -160,6 +170,7 @@ frontend/
 - User profile management
 
 ### Shopping Experience
+
 - Product browsing with filters
 - Product details
 - Shopping cart (persistent)
@@ -168,12 +179,14 @@ frontend/
 - Order history
 
 ### Payments
+
 - Razorpay integration
 - Secure payment flow
 - Order status tracking
 - Payment verification
 
 ### Admin Dashboard
+
 - User management
 - Role and permission management
 - Product CRUD
@@ -182,6 +195,7 @@ frontend/
 - Audit logs
 
 ### Responsive Design
+
 - Mobile-first approach
 - Tailwind breakpoints (sm, md, lg, xl)
 - Touch-friendly controls
@@ -192,7 +206,9 @@ frontend/
 ## Layouts
 
 ### Root Layout (`app/layout.tsx`)
+
 Global layout with:
+
 - PublicLayout wrapper (navbar + footer)
 - AuthProvider
 - CartProvider
@@ -202,6 +218,7 @@ Global layout with:
 **No duplicate navbars** - Single navbar instance at root level.
 
 ### Loading States
+
 - Initial loading: Full-screen overlay below navbar
 - Page transitions: Skeleton screens
 - Component loading: Spinner inside containers
@@ -210,6 +227,7 @@ Global layout with:
 ## Styling
 
 ### Tailwind CSS 4
+
 - Utility-first CSS
 - Custom color palette
 - Responsive breakpoints
@@ -217,12 +235,14 @@ Global layout with:
 - Component classes
 
 ### Theme Colors
+
 - Primary: Brand colors
 - Secondary: Accent colors
 - Muted: Background colors
 - Success/Error/Warning: Status colors
 
 ### Responsive Breakpoints
+
 ```css
 sm:  640px   /* Small tablets */
 md:  768px   /* Tablets */
@@ -234,6 +254,7 @@ xl:  1280px  /* Desktops */
 ## Best Practices
 
 ### Component Usage
+
 ```tsx
 import { Button, Card, Input } from "@/components/ui";
 
@@ -245,10 +266,11 @@ import { Button, Card, Input } from "@/components/ui";
     <Input label="Name" />
     <Button variant="primary">Submit</Button>
   </Card.Content>
-</Card>
+</Card>;
 ```
 
 ### Protected Routes
+
 ```tsx
 // Automatic redirection if not authenticated
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -263,12 +285,14 @@ export default function Page() {
 ```
 
 ### API Calls
+
 ```tsx
 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/products`);
 const data = await response.json();
 ```
 
 ### Cart Operations
+
 ```tsx
 import { useCart } from "@/contexts/CartContext";
 
@@ -281,6 +305,7 @@ removeFromCart(productId);
 ## Development
 
 ### Code Quality
+
 - TypeScript for type safety
 - ESLint for code quality
 - Component modularity
@@ -288,6 +313,7 @@ removeFromCart(productId);
 - Consistent naming conventions
 
 ### Performance
+
 - Server Components by default
 - Client Components only when needed
 - Image optimization (next/image)
@@ -295,6 +321,7 @@ removeFromCart(productId);
 - Lazy loading
 
 ### Accessibility
+
 - Semantic HTML
 - ARIA labels
 - Keyboard navigation
@@ -304,6 +331,7 @@ removeFromCart(productId);
 ## Deployment
 
 ### Production Build
+
 ```bash
 # Build optimized bundle
 npm run build
@@ -313,18 +341,21 @@ npm start
 ```
 
 ### Environment Setup
+
 1. Set `NEXT_PUBLIC_API_URL` to production backend URL
 2. Set `NEXT_PUBLIC_RAZORPAY_KEY_ID` to live Razorpay key
 3. Configure CORS on backend for production domain
 4. Test payment flow with Razorpay live mode
 
 ### Deployment Platforms
+
 - **Vercel** (recommended for Next.js)
 - **Netlify**
 - **AWS Amplify**
 - **Custom server** (npm start)
 
 ### Build Output
+
 ```
 .next/               # Next.js build output
 .next/static/        # Static assets

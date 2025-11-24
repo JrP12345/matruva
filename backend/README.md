@@ -66,14 +66,14 @@ SUPERADMIN_PASSWORD=VeryStrongPassword!
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server with tsx |
-| `npm run generate-keys` | Generate RSA key pairs for JWT |
-| `npm run seed` | Seed super admin and roles |
-| `npm run verify-jwks` | Verify JWKS implementation |
-| `npm test` | Run Jest tests |
-| `npm run test:watch` | Run tests in watch mode |
+| Command                 | Description                       |
+| ----------------------- | --------------------------------- |
+| `npm run dev`           | Start development server with tsx |
+| `npm run generate-keys` | Generate RSA key pairs for JWT    |
+| `npm run seed`          | Seed super admin and roles        |
+| `npm run verify-jwks`   | Verify JWKS implementation        |
+| `npm test`              | Run Jest tests                    |
+| `npm run test:watch`    | Run tests in watch mode           |
 
 **Note:** All scripts use Node's built-in `--env-file` flag (no dotenv dependency).
 
@@ -113,11 +113,13 @@ backend/
 ## API Endpoints
 
 ### Public
+
 - `GET  /.well-known/jwks.json` - JWKS public keys
 - `GET  /v1/products` - List products (paginated)
 - `GET  /v1/products/:id` - Get product details
 
 ### Authentication
+
 - `POST /v1/auth/register` - User registration
 - `POST /v1/auth/login` - User login
 - `POST /v1/auth/refresh` - Refresh access token
@@ -125,16 +127,19 @@ backend/
 - `GET  /v1/auth/me` - Get current user with permissions
 
 ### Orders
+
 - `POST /v1/orders` - Create order
 - `GET  /v1/orders` - List user's orders
 - `GET  /v1/orders/:id` - Get order details
 
 ### Payments
+
 - `POST /v1/payments/create` - Create Razorpay order
 - `POST /v1/payments/verify` - Verify payment
 - `POST /v1/payments/webhook` - Razorpay webhook
 
 ### Admin (RBAC Protected)
+
 - `GET  /v1/admin/dashboard` - Dashboard stats
 - `GET  /v1/admin/audit` - Audit logs
 - `GET  /v1/admin/users` - List users
@@ -154,42 +159,50 @@ Full API documentation: See [ADMIN_API.md](./ADMIN_API.md)
 ## Database Models
 
 ### User
+
 - Authentication and profile
 - Role assignment
 - Password hashing with bcrypt
 
 ### Role
+
 - Name and permissions
 - Inheritance support
 
 ### Permission
+
 - Resource and action
 - Wildcard support (`products:*`)
 
 ### Product
+
 - Details, pricing, stock
 - Image URLs
 - Status (active, draft, archived)
 
 ### Order
+
 - Items snapshot (prevent price changes)
 - Shipping and billing info
 - Payment details
 - Status tracking
 
 ### AdminActionLog
+
 - Actor, action, target
 - Metadata and timestamp
 
 ## Authentication
 
 ### JWT Tokens
+
 - **Access Token:** Short-lived (15m), stored in memory
 - **Refresh Token:** Long-lived (30d), HttpOnly cookie
 - **Algorithm:** RS256 (asymmetric encryption)
 - **JWKS:** Public keys at `/.well-known/jwks.json`
 
 ### RBAC System
+
 - Roles have permissions
 - Permissions use `resource:action` format
 - Wildcard support: `products:*`, `*:read`
@@ -209,6 +222,7 @@ npm test -- --coverage
 ```
 
 Test coverage includes:
+
 - Authentication endpoints
 - Admin user management
 - Admin role management
@@ -220,6 +234,7 @@ Test coverage includes:
 ## Razorpay Integration
 
 ### Setup
+
 1. Get test keys from https://dashboard.razorpay.com
 2. Add to `.env`:
    ```env
@@ -229,12 +244,14 @@ Test coverage includes:
    ```
 
 ### Test Cards
+
 - **Success:** 4111 1111 1111 1111
 - **CVV:** Any 3 digits
 - **Expiry:** Any future date
 - **OTP:** Any 6 digits
 
 ### Webhook
+
 - Endpoint: `POST /v1/payments/webhook`
 - Verifies signature
 - Updates order status
@@ -254,6 +271,7 @@ Test coverage includes:
 ## Deployment
 
 ### Production Setup
+
 1. Set production environment variables
 2. Generate production JWT keys
 3. Use MongoDB Atlas or production MongoDB
@@ -263,6 +281,7 @@ Test coverage includes:
 7. Configure webhook URL in Razorpay dashboard
 
 ### Build and Start
+
 ```bash
 npm run build
 npm start

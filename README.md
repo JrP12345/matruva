@@ -12,6 +12,7 @@ Full-stack e-commerce platform with Next.js 16, Express, MongoDB, and Razorpay.
 ## Features
 
 ### Customer Features
+
 - Product catalog with search, filters, and sorting
 - Shopping cart with localStorage persistence
 - Razorpay payment integration (all payment methods)
@@ -22,6 +23,7 @@ Full-stack e-commerce platform with Next.js 16, Express, MongoDB, and Razorpay.
 - Full-width auto-playing carousel
 
 ### Admin Features
+
 - Dashboard with analytics
 - Product management (CRUD operations)
 - Order management (view, update status)
@@ -33,17 +35,20 @@ Full-stack e-commerce platform with Next.js 16, Express, MongoDB, and Razorpay.
 ## Quick Start
 
 ### Prerequisites
+
 - Node.js 18+
 - MongoDB 6+
 - Razorpay account (https://dashboard.razorpay.com)
 
 ### 1. Clone Repository
+
 ```bash
 git clone https://github.com/JrP12345/matruva.git
 cd matruva
 ```
 
 ### 2. Backend Setup
+
 ```bash
 cd backend
 npm install
@@ -66,6 +71,7 @@ Backend runs on: http://localhost:3001
 Default super admin: `owner@example.com` / `VeryStrongPassword!`
 
 ### 3. Frontend Setup
+
 ```bash
 cd ../frontend
 npm install
@@ -81,7 +87,9 @@ npm run dev
 Frontend runs on: http://localhost:3000
 
 ### 4. Test Payment
+
 Use Razorpay test cards:
+
 - **Card:** 4111 1111 1111 1111
 - **CVV:** Any 3 digits
 - **Expiry:** Any future date
@@ -129,6 +137,7 @@ matruva/
 ## Environment Variables
 
 ### Backend (`.env`)
+
 ```env
 # Database
 DATABASE_URI=mongodb://localhost:27017/matruva
@@ -154,6 +163,7 @@ SUPERADMIN_PASSWORD=VeryStrongPassword!
 ```
 
 ### Frontend (`.env.local`)
+
 ```env
 # API URL
 NEXT_PUBLIC_API_URL=http://localhost:3001
@@ -165,6 +175,7 @@ NEXT_PUBLIC_RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxxxxx
 ## Available Scripts
 
 ### Backend
+
 ```bash
 npm run dev              # Start development server
 npm run generate-keys    # Generate RSA key pairs for JWT
@@ -174,6 +185,7 @@ npm test                 # Run Jest tests
 ```
 
 ### Frontend
+
 ```bash
 npm run dev              # Start dev server with Turbopack
 npm run build            # Build for production
@@ -184,11 +196,13 @@ npm run lint             # Run ESLint
 ## API Endpoints
 
 ### Public
+
 - `GET  /.well-known/jwks.json` - JWKS public keys
 - `GET  /v1/products` - List products
 - `GET  /v1/products/:id` - Get product details
 
 ### Authentication
+
 - `POST /v1/auth/register` - User registration
 - `POST /v1/auth/login` - User login
 - `POST /v1/auth/refresh` - Refresh access token
@@ -196,16 +210,19 @@ npm run lint             # Run ESLint
 - `GET  /v1/auth/me` - Get current user with permissions
 
 ### Orders
+
 - `POST /v1/orders` - Create order
 - `GET  /v1/orders` - List user's orders
 - `GET  /v1/orders/:id` - Get order details
 
 ### Payments
+
 - `POST /v1/payments/create` - Create Razorpay order
 - `POST /v1/payments/verify` - Verify payment
 - `POST /v1/payments/webhook` - Razorpay webhook
 
 ### Admin (RBAC Protected)
+
 - `GET  /v1/admin/dashboard` - Dashboard stats
 - `GET  /v1/admin/audit` - Audit logs
 - `GET  /v1/admin/users` - List users
@@ -222,6 +239,7 @@ Full API documentation: [backend/ADMIN_API.md](./backend/ADMIN_API.md)
 ## Key Technologies
 
 ### Authentication
+
 - **JWT Tokens:** RS256 asymmetric encryption
 - **Access Token:** 15 minutes, stored in memory
 - **Refresh Token:** 30 days, HttpOnly cookie
@@ -229,18 +247,21 @@ Full API documentation: [backend/ADMIN_API.md](./backend/ADMIN_API.md)
 - **CSRF Protection:** Custom header for refresh endpoint
 
 ### Authorization
+
 - **RBAC:** Role-based access control
 - **Permissions:** `resource:action` format (e.g., `products:create`)
 - **Wildcards:** `products:*`, `*:read`, `*` (super admin)
 - **Audit Logs:** All admin actions tracked
 
 ### Payment Integration
+
 - **Provider:** Razorpay
 - **Methods:** UPI, Cards, NetBanking, Wallets
 - **Webhook:** Automatic order status updates
 - **Security:** Signature verification
 
 ### Frontend Architecture
+
 - **App Router:** Next.js 16 with Server Components
 - **State Management:** React Context (Auth, Cart, Theme)
 - **Styling:** Tailwind CSS 4 with custom theme
@@ -267,6 +288,7 @@ Full API documentation: [backend/ADMIN_API.md](./backend/ADMIN_API.md)
 ## Testing
 
 ### Backend
+
 ```bash
 cd backend
 npm test                    # Run all tests
@@ -275,6 +297,7 @@ npm test -- --coverage      # With coverage
 ```
 
 Test coverage includes:
+
 - Authentication endpoints
 - Admin CRUD operations
 - RBAC and permissions
@@ -315,6 +338,7 @@ MIT
 ## Support
 
 For issues and questions:
+
 - Open an issue on GitHub
 - Email: support@example.com
 
