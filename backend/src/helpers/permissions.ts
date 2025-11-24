@@ -86,3 +86,32 @@ export async function getUserPermissions(userId: string): Promise<string[]> {
     return [];
   }
 }
+
+/**
+ * Middleware to require a specific permission
+ */
+import { type Request, type Response, type NextFunction } from "express";
+
+export function requirePermission(permission: string) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // Get userId from auth middleware (it sets req.userId)
+      const userId = (req as any).userId || (req as any).user?.sub;
+
+      if (!userId) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+
+      const hasPermission = await userHasPermission(userId, permission);
+
+      if (!hasPermission) {
+        return res.status(403).json({ error: "Insufficient permissions" });
+      }
+
+      next();
+    } catch (error) {
+      console.error("Permission middleware error:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  };
+}

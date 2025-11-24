@@ -44,6 +44,12 @@ tags:
     description: User management (SUPER_ADMIN only)
   - name: Admin - Keys
     description: JWT signing key management (SUPER_ADMIN only)
+  - name: Admin - Products
+    description: Product management (admin with products permissions)
+  - name: Admin - Uploads
+    description: File upload management (admin with products permissions)
+  - name: Products
+    description: Public product catalog
   - name: Public
     description: Public endpoints (JWKS, health)
 
@@ -87,6 +93,312 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/JWK"
+
+  # ============================================
+  # PRODUCTS - PUBLIC
+  # ============================================
+  /v1/products:
+    get:
+      tags:
+        - Products
+      summary: List products
+      description: Get paginated list of active products with optional filters
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: search
+          in: query
+          description: Search in product name and description
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: minPrice
+          in: query
+          description: Minimum price in minor units (paise/cents)
+          schema:
+            type: integer
+        - name: maxPrice
+          in: query
+          description: Maximum price in minor units (paise/cents)
+          schema:
+            type: integer
+        - name: inStock
+          in: query
+          description: Filter by stock availability
+          schema:
+            type: boolean
+        - name: sort
+          in: query
+          description: Sort by field
+          schema:
+            type: string
+            enum: [price_asc, price_desc, name_asc, name_desc, created_desc]
+            default: created_desc
+      responses:
+        "200":
+          description: Products list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+
+  /v1/products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get product details
+      description: Get single product by ID (only active products for public)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Product details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  product:
+                    $ref: "#/components/schemas/Product"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ============================================
+  # PRODUCTS - ADMIN
+  # ============================================
+  /v1/admin/products:
+    post:
+      tags:
+        - Admin - Products
+      summary: Create product
+      description: Create a new product (requires products:create permission)
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductCreate"
+      responses:
+        "201":
+          description: Product created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Product created successfully
+                  product:
+                    $ref: "#/components/schemas/Product"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /v1/admin/products/{id}:
+    patch:
+      tags:
+        - Admin - Products
+      summary: Update product
+      description: Update product details (requires products:update permission)
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductUpdate"
+      responses:
+        "200":
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Product updated successfully
+                  product:
+                    $ref: "#/components/schemas/Product"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      tags:
+        - Admin - Products
+      summary: Delete product
+      description: Delete a product (requires products:delete permission)
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Product deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Product deleted successfully
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ============================================
+  # UPLOADS - ADMIN
+  # ============================================
+  /v1/admin/uploads/signed-url:
+    post:
+      tags:
+        - Admin - Uploads
+      summary: Generate signed upload URL
+      description: Generate presigned URL for file upload (requires products:create permission)
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - fileName
+                - fileType
+                - fileSize
+              properties:
+                fileName:
+                  type: string
+                  example: product-image.jpg
+                fileType:
+                  type: string
+                  example: image/jpeg
+                fileSize:
+                  type: integer
+                  example: 1048576
+                  description: File size in bytes (max 10MB)
+      responses:
+        "200":
+          description: Signed URL generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  signedUrl:
+                    type: string
+                    description: Presigned URL for uploading file
+                    example: https://storage.example.com/uploads/123456.jpg?signature=...
+                  publicUrl:
+                    type: string
+                    description: Public URL to access uploaded file
+                    example: https://cdn.example.com/uploads/123456.jpg
+                  expiresIn:
+                    type: integer
+                    description: URL expiry time in seconds
+                    example: 300
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /v1/admin/uploads/validate:
+    post:
+      tags:
+        - Admin - Uploads
+      summary: Validate uploaded file
+      description: Validate that file was successfully uploaded (requires products:create permission)
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - publicUrl
+              properties:
+                publicUrl:
+                  type: string
+                  example: https://cdn.example.com/uploads/123456.jpg
+      responses:
+        "200":
+          description: Upload validated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Upload validated successfully
+                  url:
+                    type: string
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
 
   # ============================================
   # AUTHENTICATION
@@ -929,7 +1241,7 @@ components:
           type: string
         key:
           type: string
-          example: users.view
+          example: users:view
         description:
           type: string
         category:
@@ -939,6 +1251,172 @@ components:
         createdAt:
           type: string
           format: date-time
+
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 507f1f77bcf86cd799439011
+        name:
+          type: string
+          example: Premium Cotton T-Shirt
+        slug:
+          type: string
+          example: premium-cotton-t-shirt
+        description:
+          type: string
+          example: Soft and comfortable cotton t-shirt
+        priceMinor:
+          type: integer
+          description: Price in smallest currency unit (paise for INR, cents for USD)
+          example: 19900
+        currency:
+          type: string
+          enum: [INR, USD]
+          example: INR
+        stock:
+          type: integer
+          example: 50
+        sku:
+          type: string
+          example: TSH-001
+        images:
+          type: array
+          items:
+            type: string
+          example:
+            [
+              "https://cdn.example.com/image1.jpg",
+              "https://cdn.example.com/image2.jpg",
+            ]
+        category:
+          type: string
+          example: Clothing
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            color: "blue"
+            size: "M"
+        status:
+          type: string
+          enum: [draft, active, archived]
+          example: active
+        createdBy:
+          type: string
+          example: 507f1f77bcf86cd799439011
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ProductCreate:
+      type: object
+      required:
+        - name
+        - slug
+        - priceMinor
+      properties:
+        name:
+          type: string
+          maxLength: 200
+          example: Premium Cotton T-Shirt
+        slug:
+          type: string
+          example: premium-cotton-t-shirt
+        description:
+          type: string
+          example: Soft and comfortable cotton t-shirt
+        priceMinor:
+          type: integer
+          minimum: 0
+          example: 19900
+        currency:
+          type: string
+          enum: [INR, USD]
+          default: INR
+        stock:
+          type: integer
+          minimum: 0
+          default: 0
+          example: 50
+        sku:
+          type: string
+          example: TSH-001
+        images:
+          type: array
+          items:
+            type: string
+          example: ["https://cdn.example.com/image1.jpg"]
+        category:
+          type: string
+          example: Clothing
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            color: "blue"
+            size: "M"
+        status:
+          type: string
+          enum: [draft, active, archived]
+          default: draft
+
+    ProductUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 200
+        slug:
+          type: string
+        description:
+          type: string
+        priceMinor:
+          type: integer
+          minimum: 0
+        currency:
+          type: string
+          enum: [INR, USD]
+        stock:
+          type: integer
+          minimum: 0
+        sku:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        category:
+          type: string
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+        status:
+          type: string
+          enum: [draft, active, archived]
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 20
+        total:
+          type: integer
+          example: 100
+        pages:
+          type: integer
+          example: 5
 
     RefreshSession:
       type: object

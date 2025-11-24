@@ -123,6 +123,7 @@ import {
   Columns,
   LayoutGrid,
   LayoutList,
+  LayoutDashboard,
   Maximize,
   Minimize,
   ZoomIn,
@@ -160,6 +161,8 @@ import {
   Square,
   Triangle,
   type LucideIcon,
+  Sparkle,
+  Youtube,
 } from "lucide-react";
 
 // Export all icons in a single object
@@ -267,6 +270,7 @@ export const Icons = {
   Instagram,
   Linkedin,
   Github,
+  Youtube,
 
   // Actions & Controls
   Loader,
@@ -287,6 +291,8 @@ export const Icons = {
   Columns,
   LayoutGrid,
   LayoutList,
+  LayoutDashboard,
+  Dashboard: LayoutDashboard, // Alias
   Maximize,
   Minimize,
   ZoomIn,
@@ -325,6 +331,7 @@ export const Icons = {
   Circle,
   Square,
   Triangle,
+  Sparkle,
 } as const;
 
 // Export the Icon type

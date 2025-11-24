@@ -1,525 +1,369 @@
-# 🎨 MATRUVA Frontend - Next.js Application
+# MATRUVA Frontend
 
-**Modern React application with Next.js 16, TypeScript, and Apple-inspired design system.**
+Modern e-commerce UI built with Next.js 16, React 19, TypeScript, and Tailwind CSS 4.
 
----
+## Features
 
-## ✨ Features
+- Next.js 16 with App Router and Turbopack
+- React 19 with Server Components
+- TypeScript for type safety
+- Tailwind CSS 4 for styling
+- 40+ reusable UI components
+- Responsive design (mobile-first)
+- Dark mode support
+- JWT authentication
+- Razorpay payment integration
+- Shopping cart
+- Order management
+- Product browsing
 
-- ✅ **Next.js 16** - Latest App Router with Turbopack
-- ✅ **React 19** - Concurrent rendering + Server Components
-- ✅ **TypeScript** - Full type safety
-- ✅ **Tailwind CSS 4** - Utility-first styling
-- ✅ **JWT Authentication** - Silent auth + auto-refresh
-- ✅ **Apple-Inspired Design** - SF Pro typography + smooth animations
-- ✅ **30+ UI Components** - Fully reusable component library
-- ✅ **Dark/Light Theme** - System preference + manual toggle
-- ✅ **Protected Routes** - Permission-based access control
-- ✅ **Responsive Design** - Mobile-first approach
-
----
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-- Backend server running (port 3001)
-
-### Installation
+## Quick Start
 
 ```bash
-# 1. Install dependencies
+# Install dependencies
 npm install
 
-# 2. Configure environment
-cp .env.example .env.local
-# Edit .env.local with your API URL
+# Copy environment template
+cp .env.local.example .env.local
+# Edit .env.local with your API URL and Razorpay key
 
-# 3. Start development server
+# Start development server
 npm run dev
-
-# 4. Open browser
-# http://localhost:3000
 ```
 
-### Default Credentials
+**Frontend runs on:** http://localhost:3000  
+**Backend API:** http://localhost:3001
 
+## Environment Variables
+
+Create `.env.local` file (see `.env.local.example`):
+
+```env
+# API URL (backend server)
+NEXT_PUBLIC_API_URL=http://localhost:3001
+
+# Razorpay Key (from https://dashboard.razorpay.com)
+NEXT_PUBLIC_RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxxxxx
 ```
-Email:    owner@example.com
-Password: VeryStrongPassword!
-```
 
----
+## Scripts
 
-## 📜 Available Scripts
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server with Turbopack |
+| `npm run build` | Build for production |
+| `npm start` | Start production server |
+| `npm run lint` | Run ESLint |
 
-| Command         | Description                           |
-| --------------- | ------------------------------------- |
-| `npm run dev`   | Start development server (port 3000)  |
-| `npm run build` | Build production bundle               |
-| `npm start`     | Start production server               |
-| `npm run lint`  | Run ESLint                            |
-
----
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 frontend/
 ├── src/
-│   ├── app/                      # Next.js pages (App Router)
-│   │   ├── page.tsx              # Home page
-│   │   ├── layout.tsx            # Root layout
-│   │   ├── globals.css           # Global styles
-│   │   ├── login/
-│   │   │   └── page.tsx          # Login page
-│   │   └── admin/
-│   │       └── dashboard/
-│   │           └── page.tsx      # Admin dashboard
-│   ├── components/
-│   │   ├── ProtectedRoute.tsx    # Route guard component
-│   │   └── ui/                   # Reusable UI components
-│   │       ├── Badge.tsx
-│   │       ├── Breadcrumb.tsx
-│   │       ├── Button.tsx
-│   │       ├── Card.tsx
-│   │       ├── Carousel.tsx
-│   │       ├── CartItem.tsx
-│   │       ├── Checkbox.tsx
-│   │       ├── ColorPicker.tsx
-│   │       ├── Combobox.tsx
-│   │       ├── Container.tsx
-│   │       ├── DataTable.tsx
-│   │       ├── DatePicker.tsx
-│   │       ├── ErrorBoundary.tsx
-│   │       ├── Form.tsx
-│   │       ├── Input.tsx
-│   │       ├── Modal.tsx
-│   │       ├── MultiSelect.tsx
-│   │       ├── Navbar.tsx
-│   │       ├── Pagination.tsx
-│   │       ├── Portal.tsx
-│   │       ├── ProductCard.tsx
-│   │       ├── RadioGroup.tsx
-│   │       ├── SearchBar.tsx
-│   │       ├── Select.tsx
-│   │       ├── Skeleton.tsx
-│   │       ├── Spinner.tsx
-│   │       ├── Table.tsx
-│   │       ├── TextArea.tsx
-│   │       ├── ThemeToggle.tsx
-│   │       ├── TimePicker.tsx
-│   │       ├── Toast.tsx
-│   │       └── index.ts          # Component exports
-│   ├── contexts/
-│   │   ├── AuthContext.tsx       # Authentication state
-│   │   └── ThemeContext.tsx      # Theme state
-│   ├── lib/
-│   │   ├── api.ts                # Axios client
-│   │   ├── authToken.ts          # Token storage (in-memory)
-│   │   ├── constants.ts          # API endpoints + config
-│   │   ├── icons.ts              # Icon utilities
-│   │   └── utils.ts              # Helper functions
-│   └── examples/
-│       ├── CheckoutFormExample.tsx
-│       └── ProductListingExample.tsx
-├── public/                       # Static assets
-├── .env.local                    # Environment variables
-├── next.config.ts                # Next.js config
-├── tailwind.config.ts            # Tailwind config
-├── tsconfig.json                 # TypeScript config
-└── package.json
+│   ├── app/              # App Router pages
+│   │   ├── layout.tsx    # Root layout (global navbar/footer)
+│   │   ├── page.tsx      # Homepage
+│   │   ├── products/     # Product pages
+│   │   ├── cart/         # Shopping cart
+│   │   ├── checkout/     # Checkout flow
+│   │   ├── orders/       # Order history
+│   │   └── admin/        # Admin dashboard
+│   ├── components/       # React components
+│   │   └── ui/           # 40+ reusable components
+│   ├── contexts/         # React Context
+│   │   ├── AuthContext.tsx
+│   │   ├── CartContext.tsx
+│   │   └── ThemeContext.tsx
+│   ├── examples/         # Component examples
+│   ├── lib/              # Utilities
+│   │   ├── utils.ts      # Helper functions
+│   │   └── icons.ts      # Icon components
+│   └── types/            # TypeScript types
+├── public/               # Static assets
+└── .env.local            # Environment variables (gitignored)
 ```
 
----
+## UI Components
 
-## 🔐 Authentication
+### Layout Components
+- `Container` - Responsive container with size variants
+- `Navbar` - Global navigation with auth state
+- `Footer` - Footer with social links
+- `Breadcrumb` - Navigation breadcrumbs
 
-### How It Works
+### Form Components
+- `Input` - Text input with validation states
+- `TextArea` - Multi-line text input
+- `Select` - Dropdown select
+- `Checkbox` - Checkbox input
+- `RadioGroup` - Radio button group
+- `Button` - Button with variants (primary, secondary, outline, ghost)
+- `Form` - Form wrapper with validation
 
-1. **Login**
-   - User enters credentials
-   - POST to `/v1/auth/login`
-   - Backend sets `refresh_token` cookie (HttpOnly)
-   - Frontend stores `accessToken` in-memory only
-   - Redirect to dashboard
+### Data Display
+- `Card` - Content card with header/footer
+- `Badge` - Status badges
+- `ProductCard` - Product display card
+- `CartItem` - Shopping cart item
+- `DataTable` - Table with sorting and pagination
+- `Table` - Basic table component
+- `Pagination` - Page navigation
 
-2. **Page Reload**
-   - Frontend calls POST `/v1/auth/refresh` on mount
-   - Backend validates refresh cookie
-   - Returns new access token
-   - User stays logged in (silent authentication)
+### Feedback
+- `Toast` - Notification toasts
+- `Modal` - Dialog/modal overlay
+- `Spinner` - Loading spinner
+- `Skeleton` - Loading placeholder
+- `ErrorBoundary` - Error handling boundary
 
-3. **Token Expiry**
-   - Access token expires (15 minutes)
-   - API returns 401
-   - Axios interceptor auto-refreshes token
-   - Original request retried
-   - User never notices
+### Interactive
+- `Carousel` - Image carousel (full-width responsive)
+- `ColorPicker` - Color selection
+- `DatePicker` - Date selection
+- `TimePicker` - Time selection
+- `Combobox` - Searchable select
+- `MultiSelect` - Multiple selection
+- `SearchBar` - Search input
 
-4. **Logout**
-   - Call POST `/v1/auth/logout`
-   - Clear cookies + in-memory token
-   - Redirect to login
+### Navigation
+- `ThemeToggle` - Dark/light mode toggle
+- `Portal` - React portal utility
 
-### Security Features
+## Contexts
 
-- ✅ **In-Memory Token Storage** - No localStorage/sessionStorage
-- ✅ **HttpOnly Cookies** - Refresh token safe from XSS
-- ✅ **CSRF Protection** - Custom `X-Auth-Refresh` header
-- ✅ **Automatic Refresh** - Seamless token renewal
-- ✅ **Request Queuing** - Prevents duplicate refresh calls
-- ✅ **Silent Authentication** - Page reloads don't log out user
+### AuthContext
+- User authentication state
+- Login/logout functions
+- JWT token management (access + refresh)
+- Loading states
+- Prevents flash on refresh
 
-### Implementation Files
+### CartContext
+- Shopping cart state
+- Add/remove items
+- Update quantities
+- Cart persistence (localStorage)
 
-- **`lib/api.ts`** - Axios client with interceptors
-- **`lib/authToken.ts`** - In-memory token storage
-- **`lib/constants.ts`** - API endpoints
-- **`contexts/AuthContext.tsx`** - Auth state management
-- **`components/ProtectedRoute.tsx`** - Route guard
+### ThemeContext
+- Dark/light mode
+- Theme persistence
+- System preference detection
 
----
+## Key Features
 
-## 🎨 Design System
+### Authentication
+- JWT-based authentication
+- Access tokens (in-memory)
+- Refresh tokens (HttpOnly cookies)
+- Protected routes with redirects
+- Automatic token refresh
+- User profile management
 
-### Typography
+### Shopping Experience
+- Product browsing with filters
+- Product details
+- Shopping cart (persistent)
+- Checkout flow
+- Order confirmation
+- Order history
 
-**Font Stack:** SF Pro Display/Text style
+### Payments
+- Razorpay integration
+- Secure payment flow
+- Order status tracking
+- Payment verification
+
+### Admin Dashboard
+- User management
+- Role and permission management
+- Product CRUD
+- Order management
+- Dashboard analytics
+- Audit logs
+
+### Responsive Design
+- Mobile-first approach
+- Tailwind breakpoints (sm, md, lg, xl)
+- Touch-friendly controls
+- Full-width carousel on mobile
+- Persistent navbar/footer
+- Optimized loading states
+
+## Layouts
+
+### Root Layout (`app/layout.tsx`)
+Global layout with:
+- PublicLayout wrapper (navbar + footer)
+- AuthProvider
+- CartProvider
+- ThemeProvider
+- Toast notifications
+
+**No duplicate navbars** - Single navbar instance at root level.
+
+### Loading States
+- Initial loading: Full-screen overlay below navbar
+- Page transitions: Skeleton screens
+- Component loading: Spinner inside containers
+- No flash on refresh: AuthContext starts with loading=true
+
+## Styling
+
+### Tailwind CSS 4
+- Utility-first CSS
+- Custom color palette
+- Responsive breakpoints
+- Dark mode support
+- Component classes
+
+### Theme Colors
+- Primary: Brand colors
+- Secondary: Accent colors
+- Muted: Background colors
+- Success/Error/Warning: Status colors
+
+### Responsive Breakpoints
+```css
+sm:  640px   /* Small tablets */
+md:  768px   /* Tablets */
+lg:  1024px  /* Laptops */
+xl:  1280px  /* Desktops */
+2xl: 1536px  /* Large desktops */
 ```
--apple-system, BlinkMacSystemFont, "SF Pro Display", 
-"SF Pro Text", "Helvetica Neue", "Segoe UI", Roboto, 
-Arial, sans-serif
-```
 
-**Type Scale:**
-| Size  | Weight         | Use Case          |
-| ----- | -------------- | ----------------- |
-| 40px  | 600 (Semibold) | Hero numbers      |
-| 34px  | 600 (Semibold) | Page titles       |
-| 24px  | 600 (Semibold) | Section headers   |
-| 17px  | 400 (Regular)  | Body text         |
-| 15px  | 400 (Regular)  | Secondary text    |
-| 13px  | 300 (Light)    | Captions          |
+## Best Practices
 
-**Font Weights:**
-- Light (300) - Captions, metadata
-- Regular (400) - Body text
-- Medium (500) - Buttons, emphasis
-- Semibold (600) - Headings, titles
-
-**Letter Spacing:**
-- `-0.022em` - Headings
-- `-0.011em` - Body text
-- `tracking-wide` - Captions
-
-**Line Height:**
-- `1.2` - Headings
-- `1.47` - Body text
-
-### Colors
-
-**Semantic:**
-- Primary: `#3b82f6` (blue-500)
-- Success: `#10b981` (green-500)
-- Warning: `#f59e0b` (amber-500)
-- Error: `#ef4444` (red-500)
-- Info: `#0ea5e9` (sky-500)
-
-**Text:**
-- Foreground: Primary text
-- Foreground Secondary: Secondary text
-- Foreground Tertiary: Tertiary text
-- Foreground Muted: Disabled text
-
-### Components
-
-#### Core Components
-- **Badge** - Status indicators
-- **Button** - All button variants
-- **Card** - Container component
-- **Input** - Text inputs
-- **Spinner** - Loading indicators
-- **Table** - Data tables
-- **Container** - Layout wrapper
-- **Navbar** - Navigation bar
-
-#### Form Components
-- **Checkbox** - Checkboxes
-- **RadioGroup** - Radio buttons
-- **Select** - Dropdowns
-- **TextArea** - Multi-line input
-- **DatePicker** - Date selection
-- **TimePicker** - Time selection
-- **ColorPicker** - Color selection
-
-#### Advanced Components
-- **DataTable** - Sortable tables
-- **Pagination** - Page navigation
-- **Modal** - Dialog boxes
-- **Toast** - Notifications
-- **Breadcrumb** - Navigation breadcrumbs
-- **SearchBar** - Search input
-- **Carousel** - Image carousel
-
-All components support:
-- ✅ Dark/Light themes
-- ✅ TypeScript
-- ✅ Accessibility (ARIA)
-- ✅ Responsive design
-- ✅ Smooth animations
-
----
-
-## 🎭 Loading States
-
-### Spinner Component
-
+### Component Usage
 ```tsx
-import { Spinner } from '@/components/ui';
+import { Button, Card, Input } from "@/components/ui";
 
-<Spinner size="lg" variant="primary" />
+<Card>
+  <Card.Header>
+    <Card.Title>Title</Card.Title>
+  </Card.Header>
+  <Card.Content>
+    <Input label="Name" />
+    <Button variant="primary">Submit</Button>
+  </Card.Content>
+</Card>
 ```
 
-**Sizes:** `sm` (16px), `md` (32px), `lg` (48px), `xl` (64px)  
-**Variants:** `primary`, `white`, `gray`
-
-### Usage Patterns
-
-**Initial Auth Check:**
+### Protected Routes
 ```tsx
-if (authLoading) {
+// Automatic redirection if not authenticated
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+
+export default function Page() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center animate-fade-in">
-        <Spinner size="lg" variant="primary" />
-        <p className="mt-4 text-[15px] text-[var(--foreground-secondary)]">
-          Loading...
-        </p>
-      </div>
-    </div>
-  );
-}
-```
-
-**Dashboard Loading:**
-```tsx
-if (loading) {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <Spinner size="lg" variant="primary" />
-    </div>
-  );
-}
-```
-
----
-
-## 🎬 Animations
-
-### Built-in Animations
-
-**Fade In:**
-```tsx
-<div className="animate-fade-in">
-  {/* Content */}
-</div>
-```
-
-**Slide Up:**
-```tsx
-<div className="animate-slide-up">
-  {/* Content */}
-</div>
-```
-
-**Scale In:**
-```tsx
-<div className="animate-scale-in">
-  {/* Content */}
-</div>
-```
-
-**Button Press:**
-```tsx
-<button className="active:scale-98 transition-transform">
-  Click me
-</button>
-```
-
-All animations use `cubic-bezier(0.25, 0.1, 0.25, 1)` for smooth, natural motion.
-
-**Reduced Motion Support:**
-- Animations respect `prefers-reduced-motion`
-- Automatically disabled for users who prefer less motion
-
----
-
-## 🛡️ Protected Routes
-
-### Implementation
-
-```tsx
-import ProtectedRoute from '@/components/ProtectedRoute';
-
-export default function AdminDashboard() {
-  return (
-    <ProtectedRoute 
-      requireAuth 
-      requireRole="SUPER_ADMIN"
-      fallback="/login"
-    >
-      {/* Protected content */}
+    <ProtectedRoute>
+      <YourContent />
     </ProtectedRoute>
   );
 }
 ```
 
-**Props:**
-- `requireAuth` - Requires logged-in user
-- `requireRole` - Requires specific role
-- `requirePermission` - Requires specific permission
-- `fallback` - Redirect URL if unauthorized
-
----
-
-## 🌐 Environment Variables
-
-```env
-# API Configuration
-NEXT_PUBLIC_API_URL=http://localhost:3001
-```
-
-**Note:** Variables prefixed with `NEXT_PUBLIC_` are exposed to the browser.
-
----
-
-## 📱 Responsive Design
-
-### Breakpoints
-
-- **Mobile:** < 768px
-- **Tablet:** 768px - 1024px
-- **Desktop:** > 1024px
-
-### Grid System
-
+### API Calls
 ```tsx
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-  {/* Responsive grid items */}
-</div>
+const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/products`);
+const data = await response.json();
 ```
 
----
+### Cart Operations
+```tsx
+import { useCart } from "@/contexts/CartContext";
 
-## 🧪 Testing
+const { cart, addToCart, removeFromCart } = useCart();
 
-### Manual Testing Checklist
-
-- [ ] Login with correct credentials → Success
-- [ ] Login with wrong credentials → Error message
-- [ ] Page reload → User stays logged in
-- [ ] Token expiry → Auto-refresh works
-- [ ] Logout → Clears session
-- [ ] Protected routes → Redirect if not authenticated
-- [ ] Theme toggle → Works without logging out
-- [ ] No console errors
-- [ ] Responsive on mobile/tablet/desktop
-
----
-
-## 🐛 Troubleshooting
-
-### Backend Not Connected
-```bash
-# Check backend is running
-curl http://localhost:3001/health
-
-# Start backend
-cd ../backend
-npm run dev
+addToCart(product, quantity);
+removeFromCart(productId);
 ```
 
-### Authentication Issues
-```bash
-# Clear browser cookies
-# DevTools → Application → Cookies → Delete all
+## Development
 
-# Check API URL in .env.local
-cat .env.local
+### Code Quality
+- TypeScript for type safety
+- ESLint for code quality
+- Component modularity
+- Reusable hooks
+- Consistent naming conventions
 
-# Verify backend CORS allows localhost:3000
-```
+### Performance
+- Server Components by default
+- Client Components only when needed
+- Image optimization (next/image)
+- Code splitting
+- Lazy loading
 
-### TypeScript Errors
-```bash
-# Restart TypeScript server
-# VS Code: Cmd+Shift+P → "TypeScript: Restart TS Server"
+### Accessibility
+- Semantic HTML
+- ARIA labels
+- Keyboard navigation
+- Focus management
+- Screen reader support
 
-# Clear Next.js cache
-rm -rf .next
-npm run dev
-```
+## Deployment
 
----
-
-## 🚀 Deployment
-
-### Build for Production
-
+### Production Build
 ```bash
 # Build optimized bundle
 npm run build
 
-# Test production build locally
+# Start production server
 npm start
-
-# Deploy to Vercel (recommended)
-vercel deploy
 ```
 
-### Environment Variables (Production)
+### Environment Setup
+1. Set `NEXT_PUBLIC_API_URL` to production backend URL
+2. Set `NEXT_PUBLIC_RAZORPAY_KEY_ID` to live Razorpay key
+3. Configure CORS on backend for production domain
+4. Test payment flow with Razorpay live mode
 
-```env
-NEXT_PUBLIC_API_URL=https://api.yourdomain.com
+### Deployment Platforms
+- **Vercel** (recommended for Next.js)
+- **Netlify**
+- **AWS Amplify**
+- **Custom server** (npm start)
+
+### Build Output
+```
+.next/               # Next.js build output
+.next/static/        # Static assets
+.next/server/        # Server-side code
+out/                 # Static export (if using)
 ```
 
----
+## Troubleshooting
 
-## 📚 Documentation
+### Common Issues
 
-- **Main README:** [`../README.md`](../README.md) - Project overview
-- **Backend Docs:** [`../backend/README.md`](../backend/README.md) - API documentation
+**Issue:** Navbar flickering or duplicates  
+**Solution:** Check that PublicLayout is only in root layout.tsx
 
----
+**Issue:** Loading flash on refresh  
+**Solution:** Verified - AuthContext starts with loading=true
 
-## ✅ Status
+**Issue:** Carousel not full width  
+**Solution:** Already fixed - Removed Container wrapper, responsive margins
 
-**Version:** 1.0.0  
-**Status:** ✅ Production Ready  
-**Framework:** Next.js 16.0.3  
-**React:** 19  
-**TypeScript:** 5
+**Issue:** Environment variables not loading  
+**Solution:** Restart dev server after changing .env.local
 
----
+**Issue:** Payment not working  
+**Solution:** Check Razorpay key is correct and test mode is enabled
 
-## 🎯 Key Features Implemented
+## Browser Support
 
-- ✅ Secure JWT authentication
-- ✅ Silent authentication on reload
-- ✅ Automatic token refresh
-- ✅ Protected routes with guards
-- ✅ Admin dashboard with stats
-- ✅ Apple-inspired UI design
-- ✅ 30+ reusable components
-- ✅ Dark/Light theme support
-- ✅ Smooth animations
-- ✅ Fully responsive
-- ✅ TypeScript coverage
-- ✅ No console errors
-- ✅ Production ready
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+- Mobile browsers (iOS Safari, Chrome Mobile)
+
+## License
+
+MIT
 
 ---
 
-**Built with ❤️ using Next.js + React + TypeScript + Tailwind CSS**
+**Main README:** [../README.md](../README.md)  
+**Backend README:** [../backend/README.md](../backend/README.md)

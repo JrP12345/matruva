@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import Button from "./Button";
 import SearchBar from "./SearchBar";
@@ -107,7 +108,7 @@ const Navbar: React.FC<NavbarProps> = ({
           {navLinks.length > 0 && (
             <div className="hidden lg:flex items-center gap-6">
               {navLinks.map((link, index) => (
-                <a
+                <Link
                   key={link.name}
                   href={link.href}
                   className="relative text-sm font-medium text-[var(--foreground-secondary)] hover:text-[var(--primary)] transition-all duration-300 group"
@@ -120,7 +121,7 @@ const Navbar: React.FC<NavbarProps> = ({
                     </span>
                   )}
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--primary)] group-hover:w-full transition-all duration-300"></span>
-                </a>
+                </Link>
               ))}
             </div>
           )}
@@ -228,7 +229,7 @@ const Navbar: React.FC<NavbarProps> = ({
           <Container size="xl">
             <div className="py-4 space-y-1">
               {navLinks.map((link, index) => (
-                <a
+                <Link
                   key={link.name}
                   href={link.href}
                   className="flex items-center justify-between px-4 py-3 text-sm font-medium text-[var(--foreground-secondary)] hover:bg-[var(--muted)] rounded-lg transition-all duration-300 hover:translate-x-1"
@@ -243,7 +244,7 @@ const Navbar: React.FC<NavbarProps> = ({
                       {link.badge}
                     </span>
                   )}
-                </a>
+                </Link>
               ))}
             </div>
           </Container>

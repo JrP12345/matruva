@@ -33,19 +33,18 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   useEffect(() => {
     if (!loading && !isAuthenticated && !hasRedirectedRef.current) {
       hasRedirectedRef.current = true;
-      console.log("[ProtectedRoute] Not authenticated, redirecting to login");
       router.replace("/login");
     }
   }, [loading, isAuthenticated, router]);
 
-  // Show loading spinner with Apple style
+  // Show loading spinner with Apple style - covers entire viewport including navbar
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center ">
+      <div className="fixed inset-0 z-[100] bg-[var(--background)] flex items-center justify-center">
         <div className="text-center animate-fade-in">
           <Spinner size="lg" variant="primary" />
           <p className="mt-4 text-[15px] text-[var(--foreground-secondary)] font-light tracking-wide">
-            Loading...
+            Verifying authentication...
           </p>
         </div>
       </div>

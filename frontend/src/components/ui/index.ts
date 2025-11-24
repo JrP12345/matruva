@@ -28,6 +28,7 @@ export {
 export { default as Table } from "./Table";
 export { default as DataTable } from "./DataTable";
 export { default as Spinner } from "./Spinner";
+export { default as LoadingOverlay } from "./LoadingOverlay";
 export { default as DatePicker } from "./DatePicker";
 export { default as TimePicker } from "./TimePicker";
 export { default as ColorPicker } from "./ColorPicker";
@@ -37,6 +38,7 @@ export { default as ToastProvider, useToast } from "./Toast";
 
 // Navigation Components
 export { default as Navbar } from "./Navbar";
+export { default as Footer } from "./Footer";
 
 // E-commerce Components
 export { default as ProductCard } from "./ProductCard";
@@ -61,6 +63,7 @@ export type { BreadcrumbProps, BreadcrumbItem } from "./Breadcrumb";
 export type { PaginationProps } from "./Pagination";
 export type { SkeletonProps } from "./Skeleton";
 export type { NavbarProps } from "./Navbar";
+export type { FooterProps, FooterLink, FooterSection } from "./Footer";
 export type { ProductCardProps } from "./ProductCard";
 export type { SearchBarProps } from "./SearchBar";
 export type { CartItemProps } from "./CartItem";
@@ -72,6 +75,7 @@ export type {
   DataTableRowAction,
 } from "./DataTable";
 export type { SpinnerProps } from "./Spinner";
+export type { LoadingOverlayProps } from "./LoadingOverlay";
 export type { DatePickerProps } from "./DatePicker";
 export type { TimePickerProps } from "./TimePicker";
 export type { ColorPickerProps } from "./ColorPicker";

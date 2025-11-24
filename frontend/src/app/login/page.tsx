@@ -31,12 +31,7 @@ export default function LoginPage() {
       hasCheckedAuthRef.current = true;
 
       if (isAuthenticated) {
-        console.log(
-          "[Login] User already authenticated, redirecting to dashboard"
-        );
         router.replace("/admin/dashboard");
-      } else {
-        console.log("[Login] No active session, showing login form");
       }
     }
   }, [authLoading, isAuthenticated, router]);

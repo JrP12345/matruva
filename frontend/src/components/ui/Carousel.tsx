@@ -49,7 +49,7 @@ const Carousel = memo<CarouselProps>(function Carousel({
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Slides */}
-      <div className="relative aspect-[16/9] overflow-hidden bg-[var(--muted)] transition-colors duration-300">
+      <div className="relative aspect-[16/7] sm:aspect-[16/8] md:aspect-[16/9] lg:aspect-[21/9] overflow-hidden bg-[var(--muted)] transition-colors duration-300">
         {items.map((item, index) => (
           <div
             key={index}
@@ -72,18 +72,19 @@ const Carousel = memo<CarouselProps>(function Carousel({
         <>
           <button
             onClick={goToPrev}
+            aria-label="Previous slide"
             className={cn(
-              "absolute left-4 top-1/2 -translate-y-1/2 z-20",
-              "w-12 h-12 rounded-full bg-[var(--card-background)]/90 backdrop-blur-md",
+              "absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20",
+              "w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[var(--card-background)]/90 backdrop-blur-md",
               "border border-[var(--border)] shadow-lg",
               "flex items-center justify-center",
-              "opacity-0 group-hover:opacity-100 transition-all duration-300",
+              "opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300",
               "hover:scale-110 active:scale-95",
               "text-[var(--foreground)]"
             )}
           >
             <svg
-              className="w-6 h-6"
+              className="w-5 h-5 sm:w-6 sm:h-6"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -98,18 +99,19 @@ const Carousel = memo<CarouselProps>(function Carousel({
           </button>
           <button
             onClick={goToNext}
+            aria-label="Next slide"
             className={cn(
-              "absolute right-4 top-1/2 -translate-y-1/2 z-20",
-              "w-12 h-12 rounded-full bg-[var(--card-background)]/90 backdrop-blur-md",
+              "absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20",
+              "w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[var(--card-background)]/90 backdrop-blur-md",
               "border border-[var(--border)] shadow-lg",
               "flex items-center justify-center",
-              "opacity-0 group-hover:opacity-100 transition-all duration-300",
+              "opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300",
               "hover:scale-110 active:scale-95",
               "text-[var(--foreground)]"
             )}
           >
             <svg
-              className="w-6 h-6"
+              className="w-5 h-5 sm:w-6 sm:h-6"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

@@ -81,16 +81,25 @@ export async function clearDatabase() {
 export async function seedBasicData() {
   // Create permissions
   const permissions = [
-    { key: "users.view", description: "View users", category: "users" },
-    { key: "users.manage", description: "Manage users", category: "users" },
-    { key: "roles.view", description: "View roles", category: "roles" },
-    { key: "roles.manage", description: "Manage roles", category: "roles" },
-    { key: "orders.view", description: "View orders", category: "orders" },
-    { key: "orders.manage", description: "Manage orders", category: "orders" },
+    { key: "products:create", protected: true },
+    { key: "products:read", protected: true },
+    { key: "products:update", protected: true },
+    { key: "products:delete", protected: true },
+    { key: "orders:view", protected: true },
+    { key: "orders:update", protected: true },
+    { key: "orders:fulfill", protected: true },
+    { key: "orders:refund", protected: true },
+    { key: "users:view", protected: true },
+    { key: "users:update", protected: true },
+    { key: "users:delete", protected: true },
+    { key: "admin:create", protected: true },
+    { key: "admin:update", protected: true },
+    { key: "admin:delete", protected: true },
+    { key: "admin:list", protected: true },
   ];
 
   for (const perm of permissions) {
-    await (Permission as any).create({ ...perm, protected: false });
+    await (Permission as any).create(perm);
   }
 
   // Create roles
@@ -98,7 +107,7 @@ export async function seedBasicData() {
     name: "SUPER_ADMIN",
     label: "Super Administrator",
     description: "Full system access",
-    permissions: [],
+    permissions: ["*"],
     protected: true,
   });
 
@@ -106,7 +115,14 @@ export async function seedBasicData() {
     name: "ADMIN",
     label: "Administrator",
     description: "System administrator",
-    permissions: ["users.view", "users.manage", "roles.view"],
+    permissions: [
+      "products:create",
+      "products:read",
+      "products:update",
+      "products:delete",
+      "orders:view",
+      "orders:update",
+    ],
     protected: true,
   });
 

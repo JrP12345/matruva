@@ -10,7 +10,6 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import Navbar from "@/components/ui/Navbar";
 import Container from "@/components/ui/Container";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
@@ -25,6 +24,8 @@ interface DashboardStats {
   rolesCount: number;
   permissionsCount: number;
   ordersCount: number;
+  productsCount?: number;
+  lowStockCount?: number;
   recentAdminActions: Array<{
     _id: string;
     action: string;
@@ -52,8 +53,28 @@ function DashboardContent() {
     setError("");
 
     try {
-      const response = await api.get(ADMIN_ENDPOINTS.DASHBOARD);
-      setStats(response.data);
+      const [dashboardRes, productsRes] = await Promise.all([
+        api.get(ADMIN_ENDPOINTS.DASHBOARD),
+        fetch(
+          `${
+            process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
+          }/v1/products?limit=1000`
+        )
+          .then((r) => r.json())
+          .catch(() => ({ data: [] })),
+      ]);
+
+      const products = productsRes.data || [];
+      const productsCount = products.length;
+      const lowStockCount = products.filter(
+        (p: any) => p.stock < 10 && p.stock > 0
+      ).length;
+
+      setStats({
+        ...dashboardRes.data,
+        productsCount,
+        lowStockCount,
+      });
     } catch (err: any) {
       console.error("Failed to fetch dashboard:", err);
       setError(err.response?.data?.message || "Failed to load dashboard");
@@ -128,23 +149,8 @@ function DashboardContent() {
 
   return (
     <div className="min-h-screen ">
-      {/* Navbar with Theme Toggle */}
-      <Navbar
-        brandName="MATRUVA Admin"
-        showSearch={false}
-        showCart={false}
-        showThemeToggle={true}
-        sticky={true}
-        navLinks={[
-          { name: "Dashboard", href: "/admin/dashboard" },
-          { name: "Users", href: "#" },
-          { name: "Roles", href: "#" },
-          { name: "Audit", href: "#" },
-        ]}
-      />
-
       {/* Welcome Section */}
-      <Container size="xl" className="py-6">
+      <Container size="xl" className="py-6 mt-16">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold mb-1">
@@ -181,10 +187,31 @@ function DashboardContent() {
             </div>
           </Card>
 
+          <Card
+            variant="elevated"
+            hover
+            animated
+            className="cursor-pointer"
+            onClick={() => router.push("/admin/products")}
+          >
+            <div className="text-center">
+              <div className="text-4xl mb-2">📦</div>
+              <h3 className="text-3xl font-bold text-purple-600">
+                {stats?.productsCount || 0}
+              </h3>
+              <p className="text-[var(--text-secondary)] text-sm">Products</p>
+              {(stats?.lowStockCount || 0) > 0 && (
+                <Badge variant="warning" size="sm" className="mt-2">
+                  {stats?.lowStockCount} low stock
+                </Badge>
+              )}
+            </div>
+          </Card>
+
           <Card variant="elevated" hover animated>
             <div className="text-center">
               <div className="text-4xl mb-2">🎭</div>
-              <h3 className="text-3xl font-bold text-purple-600">
+              <h3 className="text-3xl font-bold text-green-600">
                 {stats?.rolesCount || 0}
               </h3>
               <p className="text-[var(--text-secondary)] text-sm">Roles</p>
@@ -194,22 +221,12 @@ function DashboardContent() {
           <Card variant="elevated" hover animated>
             <div className="text-center">
               <div className="text-4xl mb-2">🔑</div>
-              <h3 className="text-3xl font-bold text-green-600">
+              <h3 className="text-3xl font-bold text-orange-600">
                 {stats?.permissionsCount || 0}
               </h3>
               <p className="text-[var(--text-secondary)] text-sm">
                 Permissions
               </p>
-            </div>
-          </Card>
-
-          <Card variant="elevated" hover animated>
-            <div className="text-center">
-              <div className="text-4xl mb-2">📦</div>
-              <h3 className="text-3xl font-bold text-orange-600">
-                {stats?.ordersCount || 0}
-              </h3>
-              <p className="text-[var(--text-secondary)] text-sm">Orders</p>
             </div>
           </Card>
         </div>
@@ -243,7 +260,26 @@ function DashboardContent() {
         </Card>
 
         {/* Quick Actions */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6">
+          <Card variant="outlined" hover padding="lg" className="text-center">
+            <div className="text-5xl mb-4">📦</div>
+            <h3 className="font-semibold text-[20px] mb-2 tracking-tight">
+              Manage Products
+            </h3>
+            <p className="text-[15px] text-[var(--foreground-secondary)] font-light mb-4 tracking-wide">
+              Add, edit, and manage products
+            </p>
+            <Button
+              variant="primary"
+              size="md"
+              fullWidth
+              onClick={() => router.push("/admin/products")}
+              className="font-medium"
+            >
+              View Products
+            </Button>
+          </Card>
+
           <Card variant="outlined" hover padding="lg" className="text-center">
             <div className="text-5xl mb-4">👥</div>
             <h3 className="font-semibold text-[20px] mb-2 tracking-tight">

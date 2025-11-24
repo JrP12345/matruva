@@ -1,41 +1,81 @@
 # MATRUVA Backend
 
-E-commerce backend with advanced JWT authentication, role-based access control, and key rotation.
+Express.js API with TypeScript, MongoDB, JWT authentication, and Razorpay integration.
 
 ## Features
 
-- **JWT Authentication** - RS256 with JWKS and key rotation
-- **Role-Based Access Control** - Granular permissions system
-- **Key Management** - Admin API for key lifecycle
-- **Audit Logging** - Complete action tracking
-- **Type-Safe** - Full TypeScript implementation
+- RESTful API with Express.js
+- MongoDB with Mongoose ODM
+- JWT authentication (RS256 asymmetric encryption)
+- Role-based access control (RBAC)
+- Razorpay payment integration
+- Order and product management
+- Admin audit logs
+- Comprehensive test suite
 
-## Quick Setup
+## Quick Start
 
 ```bash
 # Install dependencies
 npm install
 
-# Generate RSA keys
+# Copy environment template
+cp .env.example .env
+# Edit .env with your MongoDB URI and Razorpay keys
+
+# Generate JWT keys
 npm run generate-keys
 
-# Seed database
+# Seed super admin and roles
 npm run seed
 
-# Start server
+# Start development server
 npm run dev
 ```
 
-## Available Scripts
+**Server runs on:** http://localhost:3001  
+**Default Super Admin:** owner@example.com / VeryStrongPassword!
 
-| Command                 | Description                              |
-| ----------------------- | ---------------------------------------- |
-| `npm run dev`           | Start development server                 |
-| `npm run seed`          | Seed database with roles and super admin |
-| `npm run generate-keys` | Generate new RSA key pairs               |
-| `npm run verify-jwks`   | Verify JWKS implementation               |
-| `npm test`              | Run test suite                           |
-| `npm run test:watch`    | Run tests in watch mode                  |
+## Environment Variables
+
+Create `.env` file (see `.env.example`):
+
+```env
+# Database
+DATABASE_URI=mongodb://localhost:27017/matruva
+
+# Razorpay
+RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxxxxx
+RAZORPAY_KEY_SECRET=your_secret_key
+RAZORPAY_WEBHOOK_SECRET=webhook_secret
+
+# Server
+PORT=3001
+NODE_ENV=development
+
+# JWT (paths to generated keys)
+JWT_ACCESS_PRIVATE_KEY=./keys/access-private.pem
+JWT_ACCESS_PUBLIC_KEY=./keys/access-public.pem
+JWT_REFRESH_PRIVATE_KEY=./keys/refresh-private.pem
+JWT_REFRESH_PUBLIC_KEY=./keys/refresh-public.pem
+
+# Super Admin (for seeding)
+SUPERADMIN_EMAIL=owner@example.com
+SUPERADMIN_PASSWORD=VeryStrongPassword!
+```
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server with tsx |
+| `npm run generate-keys` | Generate RSA key pairs for JWT |
+| `npm run seed` | Seed super admin and roles |
+| `npm run verify-jwks` | Verify JWKS implementation |
+| `npm test` | Run Jest tests |
+| `npm run test:watch` | Run tests in watch mode |
+
+**Note:** All scripts use Node's built-in `--env-file` flag (no dotenv dependency).
 
 ## Project Structure
 
@@ -43,179 +83,197 @@ npm run dev
 backend/
 ├── src/
 │   ├── config/           # Configuration and key store
-│   ├── controllers/      # Request handlers
-│   ├── helpers/          # JWT and auth helpers
+│   ├── controllers/      # Route handlers
+│   │   ├── auth.ts       # Authentication
+│   │   ├── orders.ts     # Order management
+│   │   ├── products.ts   # Product CRUD
+│   │   └── admin*.ts     # Admin endpoints
+│   ├── helpers/          # JWT, permissions, audit
 │   ├── middleware/       # Auth middleware
 │   ├── models/           # Mongoose models
+│   │   ├── User.ts
+│   │   ├── Product.ts
+│   │   ├── Order.ts
+│   │   ├── Role.ts
+│   │   └── Permission.ts
 │   ├── routes/           # API routes
-│   │   ├── auth.ts       # Authentication endpoints
-│   │   ├── jwks.ts       # JWKS endpoint
-│   │   └── adminKeys.ts  # Key management API
-│   ├── scripts/          # Utility scripts
-│   └── tests/            # Test files
+│   │   ├── auth.ts
+│   │   ├── products.ts
+│   │   ├── orders.ts
+│   │   ├── payments.ts
+│   │   ├── admin.ts
+│   │   └── jwks.ts
+│   ├── scripts/          # Setup scripts
+│   └── app.ts            # Express app
+├── test/                 # Jest tests
 ├── keys/                 # RSA key pairs (gitignored)
-└── .env                  # Environment variables
+└── .env                  # Environment variables (gitignored)
 ```
 
 ## API Endpoints
 
 ### Public
-
-- `GET /.well-known/jwks.json` - JWKS endpoint
-- `GET /health` - Health check
+- `GET  /.well-known/jwks.json` - JWKS public keys
+- `GET  /v1/products` - List products (paginated)
+- `GET  /v1/products/:id` - Get product details
 
 ### Authentication
-
 - `POST /v1/auth/register` - User registration
 - `POST /v1/auth/login` - User login
-- `POST /v1/auth/refresh` - Refresh access token (requires X-Auth-Refresh: 1 header)
+- `POST /v1/auth/refresh` - Refresh access token
 - `POST /v1/auth/logout` - Logout
-- `GET /v1/auth/me` - Get current user with effective permissions ⭐ NEW
+- `GET  /v1/auth/me` - Get current user with permissions
 
-### Admin (SUPER_ADMIN only)
+### Orders
+- `POST /v1/orders` - Create order
+- `GET  /v1/orders` - List user's orders
+- `GET  /v1/orders/:id` - Get order details
 
-#### Dashboard & Monitoring
+### Payments
+- `POST /v1/payments/create` - Create Razorpay order
+- `POST /v1/payments/verify` - Verify payment
+- `POST /v1/payments/webhook` - Razorpay webhook
 
-- `GET /v1/admin/dashboard` - System statistics and recent activity ⭐ NEW
-- `GET /v1/admin/audit` - Query audit logs with filters and pagination ⭐ NEW
+### Admin (RBAC Protected)
+- `GET  /v1/admin/dashboard` - Dashboard stats
+- `GET  /v1/admin/audit` - Audit logs
+- `GET  /v1/admin/users` - List users
+- `POST /v1/admin/users` - Create user
+- `GET  /v1/admin/roles` - List roles
+- `POST /v1/admin/roles` - Create role
+- `GET  /v1/admin/permissions` - List permissions
+- `GET  /v1/admin/orders` - List all orders
+- `GET  /v1/admin/orders/:id` - Get any order
+- `GET  /v1/admin/products` - List all products (admin view)
+- `POST /v1/admin/products` - Create product
+- `PATCH /v1/admin/products/:id` - Update product
+- `DELETE /v1/admin/products/:id` - Delete product
 
-#### Role Management
+Full API documentation: See [ADMIN_API.md](./ADMIN_API.md)
 
-- `GET /v1/admin/roles` - List all roles
-- `GET /v1/admin/roles/:name` - Get role details
-- `POST /v1/admin/roles` - Create new role
-- `PATCH /v1/admin/roles/:name` - Update role (protected roles cannot be modified)
-- `DELETE /v1/admin/roles/:name` - Delete role (protected roles cannot be deleted)
+## Database Models
 
-#### Permission Management
+### User
+- Authentication and profile
+- Role assignment
+- Password hashing with bcrypt
 
-- `GET /v1/admin/permissions` - List all permissions
-- `POST /v1/admin/permissions` - Create new permission
-- `DELETE /v1/admin/permissions/:key` - Delete permission (protected permissions cannot be deleted)
+### Role
+- Name and permissions
+- Inheritance support
 
-#### User Management
+### Permission
+- Resource and action
+- Wildcard support (`products:*`)
 
-- `GET /v1/admin/users` - List all users (with pagination)
-- `GET /v1/admin/users/:id` - Get user details and permissions
-- `PATCH /v1/admin/users/:id/role` - Assign role to user
-- `PATCH /v1/admin/users/:id/permissions` - Add extra permissions to user
-- `GET /v1/admin/users/:id/sessions` - View user's active sessions
-- `DELETE /v1/admin/users/:id/sessions/:jti` - Revoke specific session
-- `DELETE /v1/admin/users/:id/sessions` - Revoke all sessions for user
+### Product
+- Details, pricing, stock
+- Image URLs
+- Status (active, draft, archived)
 
-#### Key Management
+### Order
+- Items snapshot (prevent price changes)
+- Shipping and billing info
+- Payment details
+- Status tracking
 
-- `GET /v1/admin/keys` - List all keys
-- `POST /v1/admin/keys` - Add new key
-- `PATCH /v1/admin/keys/:kid` - Update key status (activate/deactivate)
-- `DELETE /v1/admin/keys/:kid` - Delete key
+### AdminActionLog
+- Actor, action, target
+- Metadata and timestamp
 
-## Environment Variables
+## Authentication
 
-```env
-# Server
-PORT=3000
-NODE_ENV=development
+### JWT Tokens
+- **Access Token:** Short-lived (15m), stored in memory
+- **Refresh Token:** Long-lived (30d), HttpOnly cookie
+- **Algorithm:** RS256 (asymmetric encryption)
+- **JWKS:** Public keys at `/.well-known/jwks.json`
 
-# Database
-DATABASE_URI=mongodb://localhost:27017/matruva
+### RBAC System
+- Roles have permissions
+- Permissions use `resource:action` format
+- Wildcard support: `products:*`, `*:read`
+- Permission checking via `userHasPermission` helper
 
-# JWT Keys
-JWT_ACCESS_PRIVATE_KEY=./keys/access-private.pem
-JWT_ACCESS_PUBLIC_KEY=./keys/access-public.pem
-JWT_REFRESH_PRIVATE_KEY=./keys/refresh-private.pem
-JWT_REFRESH_PUBLIC_KEY=./keys/refresh-public.pem
+## Testing
 
-# Token Expiry
-JWT_ACCESS_EXPIRES=15m
-JWT_REFRESH_EXPIRES_DAYS=30
+```bash
+# Run all tests
+npm test
 
-# Security
-SALT_ROUNDS=12
-REFRESH_COOKIE_NAME=refresh_token
-REFRESH_COOKIE_PATH=/v1/auth
+# Watch mode
+npm run test:watch
 
-# Seed Super Admin
-SUPERADMIN_EMAIL=owner@example.com
-SUPERADMIN_PASSWORD=VeryStrongPassword!
+# With coverage
+npm test -- --coverage
 ```
 
-## Security Features
+Test coverage includes:
+- Authentication endpoints
+- Admin user management
+- Admin role management
+- Admin permission management
+- Dashboard and audit logs
+- JWKS endpoint
+- Order management
 
-- **RS256 Asymmetric Encryption** - Prevents token forgery
-- **Key Rotation Support** - Zero-downtime key updates
-- **JWKS Discovery** - Standard OAuth 2.0 endpoint
-- **Audit Logging** - All admin actions tracked in AdminActionLog
-- **Role-Based Access Control** - Fine-grained permissions system
-- **Protected Roles/Permissions** - SUPER_ADMIN and system permissions cannot be deleted
-- **Session Management** - View and revoke user sessions remotely
-- **Rate Limiting** - DDoS protection
-- **Helmet Security Headers** - XSS, clickjacking protection
-- **CORS Configuration** - Cross-origin security
-- **Refresh Token Rotation** - Enhanced session security
+## Razorpay Integration
 
-## How It Works
+### Setup
+1. Get test keys from https://dashboard.razorpay.com
+2. Add to `.env`:
+   ```env
+   RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxxxxx
+   RAZORPAY_KEY_SECRET=your_secret_key
+   RAZORPAY_WEBHOOK_SECRET=webhook_secret
+   ```
 
-### JWT Authentication Flow
+### Test Cards
+- **Success:** 4111 1111 1111 1111
+- **CVV:** Any 3 digits
+- **Expiry:** Any future date
+- **OTP:** Any 6 digits
 
-1. **Login**: User logs in with email/password
+### Webhook
+- Endpoint: `POST /v1/payments/webhook`
+- Verifies signature
+- Updates order status
+- Requires `RAZORPAY_WEBHOOK_SECRET`
 
-   - Server generates access token (15min) and refresh token (30 days)
-   - Both tokens stored in httpOnly cookies
-   - Access token has `kid` (key ID) in header
+## Security
 
-2. **API Requests**: Protected routes check cookies
+- RS256 JWT (asymmetric encryption)
+- HttpOnly cookies for refresh tokens
+- CSRF protection (X-Auth-Refresh header)
+- Password hashing (bcrypt, 12 rounds)
+- RBAC with granular permissions
+- Input validation
+- Rate limiting
+- Helmet.js security headers
 
-   - Middleware reads `access_token` cookie
-   - Verifies JWT using public key (looked up by `kid`)
-   - Extracts user ID and role from token
+## Deployment
 
-3. **Token Refresh**: When access token expires
+### Production Setup
+1. Set production environment variables
+2. Generate production JWT keys
+3. Use MongoDB Atlas or production MongoDB
+4. Switch to Razorpay live keys
+5. Configure CORS for production domain
+6. Set secure cookie settings (sameSite: 'none', secure: true)
+7. Configure webhook URL in Razorpay dashboard
 
-   - Client calls `/v1/auth/refresh` (uses refresh token cookie)
-   - Server validates and rotates refresh token
-   - Issues new access token
-   - Both cookies updated
-
-4. **JWKS Discovery**: External services can verify tokens
-
-   - Public keys available at `/.well-known/jwks.json`
-   - Keys identified by `kid` in token header
-   - Standard OAuth 2.0 / OpenID format
-
-5. **Key Rotation**: Admins can add new keys
-   - Multiple keys active simultaneously (zero-downtime)
-   - Old tokens still valid during transition
-   - Deactivate old keys after grace period
-
-### Admin Key Management
-
-Super admins can manage cryptographic keys via API:
-
-- Add new public keys for verification
-- Activate/deactivate keys
-- List all keys and their status
-- All operations logged to audit trail
-
-### Security
-
-- **HttpOnly Cookies**: XSS protection, tokens not accessible to JS
-- **RS256**: Asymmetric crypto prevents token forgery
-- **Kid**: Each key has unique ID for rotation
-- **Refresh Rotation**: New refresh token on each use
-- **Token Hash**: Refresh tokens stored as bcrypt hash
-- **Audit Log**: All admin actions tracked
-
-## Tech Stack
-
-- **Runtime**: Node.js with TypeScript
-- **Framework**: Express.js 5
-- **Database**: MongoDB with Mongoose
-- **Authentication**: jsonwebtoken (RS256)
-- **Testing**: Jest with ts-jest
-- **Security**: helmet, bcrypt, rate-limit
-- **Dev Tools**: tsx, ts-node
+### Build and Start
+```bash
+npm run build
+npm start
+```
 
 ## License
 
-ISC
+MIT
+
+---
+
+**API Documentation:** [ADMIN_API.md](./ADMIN_API.md)  
+**Main README:** [../README.md](../README.md)  
+**Frontend README:** [../frontend/README.md](../frontend/README.md)

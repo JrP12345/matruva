@@ -49,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [permissions, setPermissions] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const initializingRef = React.useRef(false);
   const initializedRef = React.useRef(false);
@@ -82,12 +82,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const initialize = useCallback(async () => {
     // Only allow one initialization globally
     if (initializingRef.current || initializedRef.current) {
-      console.log("[Auth] Already initialized or initializing, skipping");
       return;
     }
 
     initializingRef.current = true;
-    console.log("[Auth] Initializing...");
     setLoading(true);
 
     try {
@@ -107,10 +105,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       // Fetch user info
       await fetchUser();
-      console.log("[Auth] Initialization complete - user authenticated");
       initializedRef.current = true;
     } catch (error: any) {
-      console.log("[Auth] No active session");
       clearAccessToken();
       setUser(null);
       setPermissions([]);
@@ -128,7 +124,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (!mountedRef.current) {
       mountedRef.current = true;
-      console.log("[AuthProvider] Mounted - initializing auth");
       initialize();
     }
   }, [initialize]);
@@ -177,6 +172,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
    * Check if user has a specific permission
    */
   const hasPermission = (permission: string): boolean => {
+    // Check for wildcard permission (super admin)
+    if (permissions.includes("*")) {
+      return true;
+    }
     return permissions.includes(permission);
   };
 

@@ -37,10 +37,45 @@ export function requireAuth(
   if (!payload || !payload.sub) {
     return res.status(401).json({ error: "Invalid token" });
   }
-
   req.userId = payload.sub;
   req.userRole = payload.role;
   req.user = payload;
+  next();
+}
+
+/**
+ * Middleware to optionally verify JWT access token
+ * Does not return 401 if no token is provided
+ */
+export function optionalAuth(
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) {
+  // Try to get access token from cookie first, then fall back to Authorization header
+  let token = req.cookies?.access_token;
+
+  if (!token) {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.substring(7);
+    }
+  }
+
+  // If no token, just continue without setting userId
+  if (!token) {
+    return next();
+  }
+
+  const payload = verifyAccessToken(token);
+
+  // If token is invalid, just continue without setting userId
+  if (payload && payload.sub) {
+    req.userId = payload.sub;
+    req.userRole = payload.role;
+    req.user = payload;
+  }
+
   next();
 }
 

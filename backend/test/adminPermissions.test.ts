@@ -63,8 +63,8 @@ describe("Admin Permissions Management Tests", () => {
       expect(response.body.permissions.length).toBeGreaterThan(0);
 
       const permissionKeys = response.body.permissions.map((p: any) => p.key);
-      expect(permissionKeys).toContain("users.view");
-      expect(permissionKeys).toContain("orders.manage");
+      expect(permissionKeys).toContain("users:view");
+      expect(permissionKeys).toContain("orders:view");
     });
 
     it("should sort permissions by key", async () => {
@@ -194,12 +194,12 @@ describe("Admin Permissions Management Tests", () => {
     it("should reject deletion of protected permissions", async () => {
       // Mark a permission as protected
       await (Permission as any).updateOne(
-        { key: "users.view" },
+        { key: "users:view" },
         { protected: true }
       );
 
       const response = await request(app)
-        .delete("/v1/admin/permissions/users.view")
+        .delete("/v1/admin/permissions/users:view")
         .set("Cookie", `access_token=${superAdminToken}`);
 
       expect(response.status).toBe(403);
@@ -207,7 +207,7 @@ describe("Admin Permissions Management Tests", () => {
 
       // Verify permission still exists
       const permission = await (Permission as any).findOne({
-        key: "users.view",
+        key: "users:view",
       });
       expect(permission).not.toBeNull();
     });
